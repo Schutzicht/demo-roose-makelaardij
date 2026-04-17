@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import Stats from '../components/home/Stats.astro';
+import CTA from '../components/global/CTA.astro';
+import { siteConfig } from '../data/siteConfig';
+---
+
+<BaseLayout title="Over ons" description="Leer Roose Makelaardij kennen - al meer dan 45 jaar uw betrouwbare NVM-makelaar in Zoutelande.">
+  <section class="bg-gradient-to-br from-primary-500 to-primary-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">Over Roose Makelaardij</h1>
+      <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+        Al meer dan 45 jaar uw vertrouwde partner in onroerend goed
+      </p>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="reveal">
+          <img
+            src="/fotos roose maakelaardij/foto van gebouw vanaf buiten 2.jpeg"
+            alt="Kantoor Roose Makelaardij in Zoutelande"
+            class="w-full aspect-[4/3] object-cover rounded-2xl"
+            loading="lazy"
+          />
+        </div>
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <span class="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3 block">Ons verhaal</span>
+          <h2 class="text-3xl font-bold text-secondary-800 mb-6">Sinds 1979 geworteld in Zeeland</h2>
+          <div class="space-y-4 text-secondary-500 leading-relaxed">
+            <p>
+              Roose Makelaardij is opgericht in 1979 en sindsdien uitgegroeid tot een begrip aan de Walcherse kust. Vanuit ons kantoor aan de Langendam 43 in Zoutelande bedienen wij een breed werkgebied van Westkapelle tot Vlissingen.
+            </p>
+            <p>
+              Als lid van de NVM en partner van Funda bieden wij u de garantie van een professionele en betrouwbare dienstverlening. Onze kracht ligt in de persoonlijke aanpak en onze diepgaande kennis van de lokale woningmarkt.
+            </p>
+            <p>
+              Of het nu gaat om een sfeervolle recreatiewoning, een karakteristiek dorpshuis of een modern nieuwbouwproject - wij kennen elke straat, elke buurt en elke mogelijkheid in ons werkgebied.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Stats />
+
+  <!-- Values -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <SectionHeading subtitle="Onze kernwaarden">
+          Waar wij voor staan
+        </SectionHeading>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {[
+          { title: 'Betrouwbaar', description: 'Als NVM-lid garanderen wij eerlijk en transparant advies.', icon: '🤝' },
+          { title: 'Lokale expertise', description: 'Meer dan 45 jaar kennis van de Walcherse woningmarkt.', icon: '📍' },
+          { title: 'Persoonlijk', description: 'U bent geen nummer. Wij kennen onze klanten bij naam.', icon: '❤️' },
+          { title: 'Resultaatgericht', description: 'Wij streven altijd naar het beste resultaat voor u.', icon: '🎯' },
+        ].map((value, i) => (
+          <div class="reveal text-center p-6" style={`transition-delay: ${i * 0.1}s;`}>
+            <span class="text-4xl mb-4 block">{value.icon}</span>
+            <h3 class="text-lg font-bold text-secondary-800 mb-2">{value.title}</h3>
+            <p class="text-sm text-secondary-500">{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Office info -->
+  <section class="py-20 bg-sand-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <SectionHeading subtitle="Ons kantoor">
+          Kom gerust langs
+        </SectionHeading>
+      </div>
+
+      <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 reveal">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <h3 class="font-bold text-secondary-800 mb-4">Adres</h3>
+              <p class="text-secondary-500 text-sm">{siteConfig.contact.address}</p>
+              <p class="text-secondary-500 text-sm">{siteConfig.contact.postalCode} {siteConfig.contact.city}</p>
+              <p class="text-secondary-500 text-sm mt-4">
+                <a href={`tel:${siteConfig.contact.phone}`} class="text-primary-500 hover:text-primary-600 font-medium">
+                  {siteConfig.contact.phone}
+                </a>
+              </p>
+              <p class="text-secondary-500 text-sm">
+                <a href={`mailto:${siteConfig.contact.email}`} class="text-primary-500 hover:text-primary-600 font-medium">
+                  {siteConfig.contact.email}
+                </a>
+              </p>
+            </div>
+            <div>
+              <h3 class="font-bold text-secondary-800 mb-4">Openingstijden</h3>
+              <ul class="space-y-1.5">
+                {siteConfig.openingHours.map((item) => (
+                  <li class="flex justify-between text-sm">
+                    <span class="text-secondary-500">{item.day}</span>
+                    <span class="text-secondary-700 font-medium">{item.hours}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

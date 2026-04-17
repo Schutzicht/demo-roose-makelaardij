@@ -1,0 +1,46 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { type Lang, t } from '../../data/translations';
+interface Props { lang?: Lang; }
+const { lang = 'nl' } = Astro.props;
+const prefix = lang === 'nl' ? '' : `/${lang}`;
+
+const plaatsen = [
+  { name: 'Zoutelande', count: 45, image: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400&q=70' },
+  { name: 'Westkapelle', count: 17, image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=70' },
+  { name: 'Biggekerke', count: 3, image: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=400&q=70' },
+  { name: 'Oostkapelle', count: 3, image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=400&q=70' },
+  { name: 'Middelburg', count: 2, image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=400&q=70' },
+  { name: 'Vlissingen', count: 2, image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&q=70' },
+];
+---
+
+<section class="py-24 bg-sand-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal">
+      <SectionHeading subtitle={t('werkgebied.subtitle', lang)}>
+        {t('werkgebied.title', lang)}
+      </SectionHeading>
+      <p class="text-center text-secondary-500 -mt-6 mb-12 max-w-2xl mx-auto">
+        {t('werkgebied.description', lang)}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      {plaatsen.map((plaats, i) => (
+        <a
+          href={`/aanbod/?locatie=${plaats.name.toLowerCase()}`}
+          class="reveal group relative rounded-2xl overflow-hidden aspect-[3/4] block"
+          style={`transition-delay: ${i * 0.08}s;`}
+        >
+          <img src={plaats.image} alt={plaats.name} class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-900/20 to-transparent group-hover:from-primary-900/90 transition-all"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <h3 class="text-white font-bold text-sm">{plaats.name}</h3>
+            <span class="text-primary-300 text-xs">{plaats.count} {t('werkgebied.properties', lang)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

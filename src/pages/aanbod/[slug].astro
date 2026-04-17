@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Button from '../../components/ui/Button.astro';
+import PropertyCard from '../../components/properties/PropertyCard.astro';
+import { getCollection, render } from 'astro:content';
+import { formatPrice } from '../../utils/helpers';
+import { siteConfig } from '../../data/siteConfig';
+
+export async function getStaticPaths() {
+  const woningen = await getCollection('woningen');
+  return woningen.map((woning) => ({
+    params: { slug: woning.id },
+    props: { woning },
+  }));
+}
+
+const { woning } = Astro.props;
+const { Content } = await render(woning);
+const { data } = woning;
+
+const statusMap = {
+  'nieuw': { label: 'Nieuw', variant: 'new' as const },
+  'te koop': { label: 'Te koop', variant: 'default' as const },
+  'verkocht': { label: 'Verkocht', variant: 'sold' as const },
+  'onder bod': { label: 'Onder bod', variant: 'reserved' as const },
+  'verhuurd': { label: 'Verhuurd', variant: 'rent' as const },
+};
+const statusInfo = statusMap[data.status];
+
+// Related properties
+const allWoningen = await getCollection('woningen');
+const related = allWoningen
+  .filter((w) => w.id !== woning.id && w.data.status !== 'verkocht')
+  .slice(0, 3);
+
+const kenmerken = [
+  { label: 'Type', value: data.type },
+  { label: 'Woonoppervlakte', value: `${data.area} m²` },
+  ...(data.plotArea ? [{ label: 'Perceeloppervlakte', value: `${data.plotArea} m²` }] : []),
+  { label: 'Slaapkamers', value: String(data.bedrooms) },
+  ...(data.bathrooms ? [{ label: 'Badkamers', value: String(data.bathrooms) }] : []),
+  ...(data.buildYear ? [{ label: 'Bouwjaar', value: String(data.buildYear) }] : []),
+  ...(data.energy ? [{ label: 'Energielabel', value: data.energy }] : []),
+];
+---
+
+<BaseLayout title={`${data.title} - ${data.city}`} description={`${data.type} te koop: ${data.title} in ${data.city}. ${data.area} m², ${data.bedrooms} slaapkamers.`}>
+  <!-- Breadcrumb -->
+  <section class="bg-sand-50 py-4 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-secondary-400">
+        <a href="/" class="hover:text-primary-500 transition-colors">Home</a>
+        <span>/</span>
+        <a href="/aanbod/" class="hover:text-primary-500 transition-colors">Woningaanbod</a>
+        <span>/</span>
+        <span class="text-secondary-600">{data.title}</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Photo gallery -->
+  <section class="bg-sand-50 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 rounded-2xl overflow-hidden">
+        <div class="md:col-span-2 md:row-span-2">
+          <img src={data.images[0]} alt={data.title} class="w-full h-full object-cover min-h-[300px] md:min-h-[500px]" />
+        </div>
+        {data.images.slice(1, 3).map((img) => (
+          <div>
+            <img src={img} alt={data.title} class="w-full h-full object-cover min-h-[150px] md:min-h-[245px]" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Main content -->
+        <div class="lg:col-span-2">
+          <!-- Header -->
+          <div class="mb-8">
+            <div class="flex items-center gap-3 mb-3">
+              <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
+              <span class="text-sm text-secondary-400 capitalize">{data.type}</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-secondary-800 mb-2">
+              {data.address}
+            </h1>
+            <p class="text-lg text-secondary-500">{data.postalCode} {data.city}</p>
+            <div class="mt-4">
+              <span class="text-3xl font-bold text-primary-500">
+                {data.priceLabel || `${formatPrice(data.price)} k.k.`}
+              </span>
+            </div>
+          </div>
+
+          <!-- Kenmerken -->
+          <div class="bg-sand-50 rounded-2xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-secondary-800 mb-4">Kenmerken</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {kenmerken.map((item) => (
+                <div>
+                  <span class="block text-xs text-secondary-400 uppercase tracking-wider">{item.label}</span>
+                  <span class="block text-sm font-semibold text-secondary-700 mt-0.5 capitalize">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Features -->
+          {data.features && data.features.length > 0 && (
+            <div class="mb-8">
+              <h2 class="text-lg font-bold text-secondary-800 mb-4">Bijzonderheden</h2>
+              <div class="flex flex-wrap gap-2">
+                {data.features.map((feature) => (
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 text-primary-600 rounded-lg text-sm">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Description -->
+          <div class="prose prose-secondary max-w-none mb-8">
+            <Content />
+          </div>
+
+          <!-- Map placeholder -->
+          {data.coordinates && (
+            <div class="rounded-2xl overflow-hidden border border-gray-200">
+              <div class="bg-sand-100 h-64 flex items-center justify-center">
+                <div class="text-center">
+                  <svg class="w-12 h-12 text-secondary-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <p class="text-sm text-secondary-400">{data.address}, {data.city}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-28">
+            <!-- Contact card -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+              <h3 class="text-lg font-bold text-secondary-800 mb-4">Interesse in deze woning?</h3>
+              <p class="text-sm text-secondary-500 mb-6">
+                Neem contact met ons op voor een bezichtiging of meer informatie.
+              </p>
+              <div class="space-y-3">
+                <Button href={`tel:${siteConfig.contact.phone}`} variant="primary" size="md" class="w-full">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Bel {siteConfig.contact.phone}
+                </Button>
+                <Button href={`mailto:${siteConfig.contact.email}?subject=Interesse ${data.title} - ${data.city}`} variant="outline" size="md" class="w-full">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Stuur e-mail
+                </Button>
+              </div>
+            </div>
+
+            <!-- Makelaar card -->
+            <div class="bg-sand-50 rounded-2xl p-6">
+              <div class="flex items-center gap-4 mb-4">
+                <img src="/logo.svg" alt="Roose Makelaardij logo" class="w-14 h-14 object-contain" />
+                <div>
+                  <span class="block text-sm font-bold text-secondary-800">{siteConfig.shortName}</span>
+                  <span class="block text-xs text-secondary-400">NVM Makelaar</span>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm text-secondary-500">
+                <p>{siteConfig.contact.address}</p>
+                <p>{siteConfig.contact.postalCode} {siteConfig.contact.city}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related properties -->
+  {related.length > 0 && (
+    <section class="py-16 bg-sand-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-secondary-800 mb-8">Vergelijkbare woningen</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {related.map((w) => (
+            <PropertyCard
+              slug={w.id}
+              title={w.data.title}
+              location={w.data.city}
+              postalCode={w.data.postalCode}
+              price={w.data.price}
+              image={w.data.images[0]}
+              bedrooms={w.data.bedrooms}
+              area={w.data.area}
+              type={w.data.type}
+              status={w.data.status}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import CTA from '../../components/global/CTA.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const diensten = await getCollection('diensten');
+  return diensten.map((dienst) => ({
+    params: { slug: dienst.id },
+    props: { dienst },
+  }));
+}
+
+const { dienst } = Astro.props;
+const { Content } = await render(dienst);
+---
+
+<BaseLayout title={dienst.data.title} description={dienst.data.description}>
+  <section class="bg-gradient-to-br from-primary-500 to-primary-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex items-center justify-center gap-2 text-sm text-primary-200 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <a href="/diensten/" class="hover:text-white transition-colors">Diensten</a>
+        <span>/</span>
+        <span class="text-white">{dienst.data.title}</span>
+      </nav>
+      <h1 class="text-4xl font-bold text-white mb-4">{dienst.data.title}</h1>
+      <p class="text-primary-100 text-lg max-w-2xl mx-auto">{dienst.data.description}</p>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="prose prose-lg prose-secondary max-w-none prose-headings:text-secondary-800 prose-a:text-primary-500">
+        <Content />
+      </div>
+
+      <div class="mt-12 flex flex-col sm:flex-row gap-4">
+        <Button href="/contact/" variant="primary" size="lg">
+          Neem contact op
+        </Button>
+        <Button href="/diensten/" variant="outline" size="lg">
+          Alle diensten bekijken
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

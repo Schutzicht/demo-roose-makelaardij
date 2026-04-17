@@ -1,0 +1,114 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import PropertyCard from '../properties/PropertyCard.astro';
+import { type Lang, t } from '../../data/translations';
+
+interface Props { lang?: Lang; }
+const { lang = 'nl' } = Astro.props;
+const prefix = lang === 'nl' ? '' : `/${lang}`;
+
+const featuredProperties = [
+  {
+    slug: 'noordstraat-22-zoutelande',
+    title: 'Noordstraat 22',
+    location: 'Zoutelande',
+    postalCode: '4374 AW',
+    price: 389000,
+    image: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=600&q=80',
+    bedrooms: 3,
+    area: 120,
+    type: 'Woonhuis',
+    status: 'nieuw' as const,
+  },
+  {
+    slug: 'noordendolfer-2c54-zoutelande',
+    title: 'Noordendolfer 2 C 54',
+    location: 'Zoutelande',
+    postalCode: '4374 EJ',
+    price: 359000,
+    image: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=600&q=80',
+    bedrooms: 2,
+    area: 85,
+    type: 'Appartement',
+    status: 'nieuw' as const,
+  },
+  {
+    slug: 'branding-13-zoutelande',
+    title: 'Branding 13',
+    location: 'Zoutelande',
+    postalCode: '4374 LD',
+    price: 559000,
+    image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=600&q=80',
+    bedrooms: 4,
+    area: 160,
+    type: 'Woonhuis',
+    status: 'nieuw' as const,
+  },
+  {
+    slug: 'smidstraat-15-westkapelle',
+    title: 'Smidstraat 15',
+    location: 'Westkapelle',
+    postalCode: '4361 BP',
+    price: 175000,
+    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&q=80',
+    bedrooms: 2,
+    area: 95,
+    type: 'Woonhuis',
+    status: 'te koop' as const,
+  },
+  {
+    slug: 'valkenisseweg-96-biggekerke',
+    title: 'Valkenisseweg 96',
+    location: 'Biggekerke',
+    postalCode: '4373 RP',
+    price: 329000,
+    image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&q=80',
+    bedrooms: 3,
+    area: 130,
+    type: 'Woonhuis',
+    status: 'te koop' as const,
+  },
+  {
+    slug: 'duinweg-48-westkapelle',
+    title: 'Duinweg 48',
+    location: 'Westkapelle',
+    postalCode: '4361 KV',
+    price: 255000,
+    image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=600&q=80',
+    bedrooms: 3,
+    area: 110,
+    type: 'Woonhuis',
+    status: 'te koop' as const,
+  },
+];
+---
+
+<section class="py-20 bg-sand-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal">
+      <SectionHeading subtitle={t('featured.subtitle', lang)}>
+        {t('featured.title', lang)}
+      </SectionHeading>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {featuredProperties.map((property, i) => (
+        <div class="reveal" style={`transition-delay: ${i * 0.1}s;`}>
+          <PropertyCard {...property} />
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-12 reveal">
+      <a
+        href={`${prefix}/aanbod/`}
+        class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 font-semibold transition-colors group"
+      >
+        {t('featured.viewAll', lang)}
+        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

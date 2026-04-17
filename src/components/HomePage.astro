@@ -1,0 +1,24 @@
+---
+import Hero from './home/Hero.astro';
+import FeaturedProperties from './home/FeaturedProperties.astro';
+import Services from './home/Services.astro';
+import About from './home/About.astro';
+import Stats from './home/Stats.astro';
+import Werkgebied from './home/Werkgebied.astro';
+import CTA from './global/CTA.astro';
+import { type Lang } from '../data/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'nl' } = Astro.props;
+---
+
+<Hero lang={lang} />
+<FeaturedProperties lang={lang} />
+<About lang={lang} />
+<Services lang={lang} />
+<Stats lang={lang} />
+<Werkgebied lang={lang} />
+<CTA lang={lang} />

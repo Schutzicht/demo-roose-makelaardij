@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import Stats from '../../components/home/Stats.astro';
+import CTA from '../../components/global/CTA.astro';
+import { siteConfig } from '../../data/siteConfig';
+---
+
+<BaseLayout lang="en" title="About us" description="Get to know Roose Makelaardij - your trusted NVM real estate agent in Zoutelande for over 45 years.">
+  <section class="bg-gradient-to-br from-primary-500 to-primary-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">About Roose Makelaardij</h1>
+      <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+        Your trusted partner in real estate for over 45 years
+      </p>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="reveal">
+          <img
+            src="/fotos roose maakelaardij/foto van gebouw vanaf buiten 2.jpeg"
+            alt="Roose Makelaardij office in Zoutelande"
+            class="w-full aspect-[4/3] object-cover rounded-2xl"
+            loading="lazy"
+          />
+        </div>
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <span class="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3 block">Our story</span>
+          <h2 class="text-3xl font-bold text-secondary-800 mb-6">Rooted in Zeeland since 1979</h2>
+          <div class="space-y-4 text-secondary-500 leading-relaxed">
+            <p>
+              Roose Makelaardij was founded in 1979 and has since grown into a household name along the Walcheren coast. From our office at Langendam 43 in Zoutelande, we serve a broad area from Westkapelle to Vlissingen.
+            </p>
+            <p>
+              As a member of the NVM and a Funda partner, we guarantee professional and reliable service. Our strength lies in our personal approach and our in-depth knowledge of the local housing market.
+            </p>
+            <p>
+              Whether it concerns a charming holiday home, a characteristic village house or a modern new-build project - we know every street, every neighbourhood and every opportunity in our area.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Stats lang="en" />
+
+  <!-- Values -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <SectionHeading subtitle="Our core values">
+          What we stand for
+        </SectionHeading>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {[
+          { title: 'Trustworthy', description: 'As an NVM member, we guarantee honest and transparent advice.', icon: '🤝' },
+          { title: 'Local expertise', description: 'Over 45 years of knowledge of the Walcheren housing market.', icon: '📍' },
+          { title: 'Personal', description: 'You are not just a number. We know our clients by name.', icon: '❤️' },
+          { title: 'Results-driven', description: 'We always strive for the best result for you.', icon: '🎯' },
+        ].map((value, i) => (
+          <div class="reveal text-center p-6" style={`transition-delay: ${i * 0.1}s;`}>
+            <span class="text-4xl mb-4 block">{value.icon}</span>
+            <h3 class="text-lg font-bold text-secondary-800 mb-2">{value.title}</h3>
+            <p class="text-sm text-secondary-500">{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Office info -->
+  <section class="py-20 bg-sand-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <SectionHeading subtitle="Our office">
+          Feel free to visit us
+        </SectionHeading>
+      </div>
+
+      <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 reveal">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <h3 class="font-bold text-secondary-800 mb-4">Address</h3>
+              <p class="text-secondary-500 text-sm">{siteConfig.contact.address}</p>
+              <p class="text-secondary-500 text-sm">{siteConfig.contact.postalCode} {siteConfig.contact.city}</p>
+              <p class="text-secondary-500 text-sm mt-4">
+                <a href={`tel:${siteConfig.contact.phone}`} class="text-primary-500 hover:text-primary-600 font-medium">
+                  {siteConfig.contact.phone}
+                </a>
+              </p>
+              <p class="text-secondary-500 text-sm">
+                <a href={`mailto:${siteConfig.contact.email}`} class="text-primary-500 hover:text-primary-600 font-medium">
+                  {siteConfig.contact.email}
+                </a>
+              </p>
+            </div>
+            <div>
+              <h3 class="font-bold text-secondary-800 mb-4">Opening hours</h3>
+              <ul class="space-y-1.5">
+                {siteConfig.openingHours.map((item) => (
+                  <li class="flex justify-between text-sm">
+                    <span class="text-secondary-500">{item.day}</span>
+                    <span class="text-secondary-700 font-medium">{item.hours}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA lang="en" />
+</BaseLayout>

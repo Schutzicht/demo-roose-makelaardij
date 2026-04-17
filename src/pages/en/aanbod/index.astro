@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionHeading from '../../../components/ui/SectionHeading.astro';
+import PropertyCard from '../../../components/properties/PropertyCard.astro';
+import { getCollection } from 'astro:content';
+
+const allWoningen = await getCollection('woningen');
+const woningen = allWoningen
+  .filter((w) => w.data.status !== 'verkocht')
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+---
+
+<BaseLayout lang="en" title="Properties" description="View our current property listings in Zoutelande, Westkapelle, Biggekerke and the surrounding area.">
+  <!-- Page header -->
+  <section class="bg-gradient-to-br from-primary-500 to-primary-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">Properties</h1>
+      <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+        Discover our current property listings along the Walcheren Coast
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter tabs -->
+  <section class="bg-white border-b border-gray-100 sticky top-16 sm:top-20 lg:top-24 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex gap-1 overflow-x-auto py-3 -mx-4 px-4" id="filter-tabs">
+        <button data-filter="all" class="filter-tab active px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors bg-primary-50 text-primary-600">
+          All properties
+        </button>
+        <button data-filter="koop" class="filter-tab px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-secondary-500 hover:bg-gray-50">
+          For sale
+        </button>
+        <button data-filter="recreatie" class="filter-tab px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-secondary-500 hover:bg-gray-50">
+          Holiday homes
+        </button>
+        <button data-filter="nieuwbouw" class="filter-tab px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-secondary-500 hover:bg-gray-50">
+          New builds
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Properties grid -->
+  <section class="py-16 bg-sand-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <p class="text-sm text-secondary-500">
+          <span id="property-count">{woningen.length}</span> properties found
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="properties-grid">
+        {woningen.map((woning) => (
+          <div class="property-item" data-category={woning.data.category}>
+            <PropertyCard
+              slug={woning.id}
+              title={woning.data.title}
+              location={woning.data.city}
+              postalCode={woning.data.postalCode}
+              price={woning.data.price}
+              image={woning.data.images[0]}
+              bedrooms={woning.data.bedrooms}
+              area={woning.data.area}
+              type={woning.data.type}
+              status={woning.data.status}
+              lang="en"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const tabs = document.querySelectorAll('.filter-tab');
+  const items = document.querySelectorAll('.property-item');
+  const countEl = document.getElementById('property-count');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        t.classList.remove('active', 'bg-primary-50', 'text-primary-600');
+        t.classList.add('text-secondary-500');
+      });
+      tab.classList.add('active', 'bg-primary-50', 'text-primary-600');
+      tab.classList.remove('text-secondary-500');
+
+      const filter = (tab as HTMLElement).dataset.filter;
+      let count = 0;
+
+      items.forEach((item) => {
+        const el = item as HTMLElement;
+        if (filter === 'all' || el.dataset.category === filter) {
+          el.style.display = '';
+          count++;
+        } else {
+          el.style.display = 'none';
+        }
+      });
+
+      if (countEl) countEl.textContent = String(count);
+    });
+  });
+</script>

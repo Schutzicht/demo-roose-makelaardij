@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/properties/PropertyCard.astro';
+import CTA from '../../components/global/CTA.astro';
+import { getCollection } from 'astro:content';
+
+const vakantiewoningen = (await getCollection('woningen'))
+  .filter((w) => w.data.category === 'vakantieverhuur' || w.data.category === 'recreatie')
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+---
+
+<BaseLayout lang="de" title="Ferienvermietung" description="Entdecken Sie Ferienhauser zur Miete in Zoutelande und Umgebung uber Roose Makelaardij.">
+  <section class="bg-gradient-to-br from-primary-500 to-primary-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">Ferienvermietung</h1>
+      <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+        Entdecken Sie unsere Ferienhauser an der wunderschonen Walcherer Kuste
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-sand-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {vakantiewoningen.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {vakantiewoningen.map((woning) => (
+            <PropertyCard
+              slug={woning.id}
+              title={woning.data.title}
+              location={woning.data.city}
+              postalCode={woning.data.postalCode}
+              price={woning.data.price}
+              image={woning.data.images[0]}
+              bedrooms={woning.data.bedrooms}
+              area={woning.data.area}
+              type={woning.data.type}
+              status={woning.data.status}
+              lang="de"
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <svg class="w-16 h-16 text-secondary-200 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <h2 class="text-xl font-bold text-secondary-600 mb-2">Noch keine Ferienhauser verfugbar</h2>
+          <p class="text-secondary-400 mb-6">Nehmen Sie Kontakt mit uns auf fur die Moglichkeiten.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <CTA lang="de" title="Auf der Suche nach einem Ferienhaus?" description="Nehmen Sie Kontakt mit uns auf und wir helfen Ihnen gerne, das perfekte Ferienhaus an der Zeelandischen Kuste zu finden." />
+</BaseLayout>

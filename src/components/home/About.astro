@@ -1,0 +1,83 @@
+---
+import Button from '../ui/Button.astro';
+import { type Lang, t } from '../../data/translations';
+
+interface Props { lang?: Lang; }
+const { lang = 'nl' } = Astro.props;
+const prefix = lang === 'nl' ? '' : `/${lang}`;
+---
+
+<section class="py-24 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Image composition -->
+      <div class="reveal relative">
+        <div class="relative">
+          <!-- Main image - Team voor kantoor -->
+          <div class="rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src="/fotos roose maakelaardij/Foto van team buiten voor de deur.jpeg"
+              alt="Team Roose Makelaardij voor het kantoor"
+              class="w-full aspect-[4/3] object-cover"
+              loading="lazy"
+            />
+          </div>
+          <!-- Secondary image - Kantoorpand -->
+          <div class="absolute -bottom-8 -right-4 sm:-right-8 w-2/5 rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+            <img
+              src="/fotos roose maakelaardij/foto van kantoorpand vanaf buiten.jpeg"
+              alt="Kantoor Roose Makelaardij Zoutelande"
+              class="w-full aspect-square object-cover"
+              loading="lazy"
+            />
+          </div>
+          <!-- Experience badge -->
+          <div class="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 bg-primary-500 text-white rounded-2xl p-5 shadow-xl">
+            <span class="block text-3xl font-extrabold leading-none">45+</span>
+            <span class="block text-xs font-medium text-primary-200 mt-1">Jaar<br/>ervaring</span>
+          </div>
+        </div>
+        <!-- Decorative accent -->
+        <div class="absolute -z-10 top-8 left-8 w-full h-full rounded-2xl bg-primary-100/50"></div>
+      </div>
+
+      <!-- Content -->
+      <div class="reveal" style="transition-delay: 0.15s;">
+        <span class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-500 mb-4">
+          <span class="w-8 h-px bg-primary-500"></span>
+          {t('about.subtitle', lang)}
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-secondary-800 leading-tight mb-6">
+          {t('about.title1', lang)} <span class="text-primary-500">{t('about.title2', lang)}</span>
+        </h2>
+        <p class="text-secondary-500 leading-relaxed mb-4 text-[15px]">
+          {t('about.p1', lang)}
+        </p>
+        <p class="text-secondary-500 leading-relaxed mb-8 text-[15px]">
+          {t('about.p2', lang)}
+        </p>
+
+        <!-- USPs in 2 columns -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+          {[t('about.usp1', lang), t('about.usp2', lang), t('about.usp3', lang), t('about.usp4', lang)].map((usp) => (
+            <div class="flex items-center gap-3 bg-sand-50 rounded-xl px-4 py-3">
+              <div class="w-8 h-8 bg-primary-400 rounded-lg flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold text-secondary-700">{usp}</span>
+            </div>
+          ))}
+        </div>
+
+        <Button href={`${prefix}/over-ons/`} variant="primary" size="lg">
+          {t('about.more', lang)}
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

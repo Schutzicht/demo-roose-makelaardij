@@ -1,0 +1,24 @@
+---
+interface Props {
+  variant?: 'new' | 'sold' | 'reserved' | 'default' | 'rent';
+  class?: string;
+}
+
+const { variant = 'default', class: className = '' } = Astro.props;
+
+const variantClasses = {
+  new: 'bg-accent-400 text-white',
+  sold: 'bg-red-500 text-white',
+  reserved: 'bg-amber-500 text-white',
+  default: 'bg-primary-500 text-white',
+  rent: 'bg-purple-500 text-white',
+};
+---
+
+<span class:list={[
+  'inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-wide rounded-md',
+  variantClasses[variant],
+  className,
+]}>
+  <slot />
+</span>
